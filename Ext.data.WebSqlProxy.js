@@ -493,11 +493,21 @@ Ext.data.WebSqlProxy = Ext.extend(Ext.data.Proxy, {
             };
 
 
-        for (var i in modifiedData) {
-            pairs.push('"'+i+'" = ?');
-            values.push(newData[i]);
-        }
-        values.push(id);
+          /*for (var i in modifiedData) {
+              pairs.push('"'+i+'" = ?');
+              values.push(newData[i]);
+          }*/
+          var fields = Object.keys(record.data);
+          for (var i=0; i<fields.length; i++) {
+              var field = fields[i];
+              if (key == field) {
+                  // Don't want to update primary key
+                  continue;
+              }
+              pairs.push(field + ' = ?');
+              values.push(record.data[field]);
+          }
+          values.push(id);
 
          me.db.transaction(function(tx){
             tx.executeSql('UPDATE ' + me.dbTable + ' SET '+pairs.join(',')+' WHERE '+key+' = ?',
