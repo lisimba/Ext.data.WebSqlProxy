@@ -142,6 +142,9 @@ Ext.data.WebSqlProxy = Ext.extend(Ext.data.Proxy, {
 
         Ext.each(fields, function(f) {
             var name = f.name;
+            if (name == me.pkField) {
+                return;
+            }
             var type = f.type.type;
 
             type = type.replace(/int/i, 'INTEGER')
