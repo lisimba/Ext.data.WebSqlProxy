@@ -511,10 +511,11 @@ Ext.data.WebSqlProxy = Ext.extend(Ext.data.Proxy, {
      * Physically removes a given record from the object store. 
      * @param {Mixed} id The id of the record to remove
      */
-    removeRecord: function(id) {
+    removeRecord: function(record) {
 
         var me = this;
-
+        var id = record.internalId || record[me.pkField] || record.data[me.pkField];
+         
         me.db.transaction(function(tx){
             tx.executeSql('DELETE FROM ' + me.dbTable + ' WHERE ' + me.pkField +' = ?',
                 [id],
